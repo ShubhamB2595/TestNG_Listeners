@@ -1,8 +1,12 @@
-package listeners;
-
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
+
+import java.io.File;
+import java.io.IOException;
 
 public class CustomListeners implements ITestListener {
 
@@ -19,6 +23,15 @@ public class CustomListeners implements ITestListener {
     @Override
     public void onTestFailure(ITestResult result) {
         System.out.println("Test Failed: " + result.getName());
+
+        TakesScreenshot takesScreenshot = (TakesScreenshot) BaseClass.driver;
+        File srcFile = takesScreenshot.getScreenshotAs(OutputType.FILE);
+        try {
+            File destFile = new File("./Screenshots/" + result.getName() + ".jpg");
+            FileUtils.copyFile(srcFile, destFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
